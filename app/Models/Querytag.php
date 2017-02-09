@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Query extends Model {
+class Querytag extends Model {
 
-	protected $table = 'querys';
+	protected $table = 'querytags';
 	public $timestamps = true;
 
 	public function ad()

@@ -3,11 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateQuerysTable extends Migration {
+class CreateQuerytagsTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('querys', function(Blueprint $table) {
+		Schema::create('querytags', function(Blueprint $table) {
 			$table->increments('id');
 			$table->string('name', 255);
 			$table->timestamps();
@@ -16,6 +16,6 @@ class CreateQuerysTable extends Migration {
 
 	public function down()
 	{
-		Schema::drop('querys');
+		Schema::drop('querytags');
 	}
 }

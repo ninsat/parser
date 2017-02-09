@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AdQuery extends Model {
+class AdQuerytag extends Model {
 
-	protected $table = 'ad_query';
+	protected $table = 'ad_querytag';
 	public $timestamps = false;
 
 }

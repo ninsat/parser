@@ -18,12 +18,12 @@ class CreateForeignKeys extends Migration {
 						->onDelete('restrict')
 						->onUpdate('restrict');
 		});
-		Schema::table('ad_query', function(Blueprint $table) {
-			$table->foreign('query_id')->references('id')->on('querys')
+		Schema::table('ad_querytag', function(Blueprint $table) {
+			$table->foreign('querytag_id')->references('id')->on('querytags')
 						->onDelete('restrict')
 						->onUpdate('restrict');
 		});
-		Schema::table('ad_query', function(Blueprint $table) {
+		Schema::table('ad_querytag', function(Blueprint $table) {
 			$table->foreign('ad_id')->references('id')->on('ads')
 						->onDelete('restrict')
 						->onUpdate('restrict');
@@ -38,11 +38,11 @@ class CreateForeignKeys extends Migration {
 		Schema::table('ads', function(Blueprint $table) {
 			$table->dropForeign('ads_owner_id_foreign');
 		});
-		Schema::table('ad_query', function(Blueprint $table) {
-			$table->dropForeign('ad_query_query_id_foreign');
+		Schema::table('ad_querytag', function(Blueprint $table) {
+			$table->dropForeign('ad_querytag_querytag_id_foreign');
 		});
-		Schema::table('ad_query', function(Blueprint $table) {
-			$table->dropForeign('ad_query_ad_id_foreign');
+		Schema::table('ad_querytag', function(Blueprint $table) {
+			$table->dropForeign('ad_querytag_ad_id_foreign');
 		});
 	}
 }

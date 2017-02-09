@@ -3,19 +3,19 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateAdQueryTable extends Migration {
+class CreateAdQuerytagTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('ad_query', function(Blueprint $table) {
+		Schema::create('ad_querytag', function(Blueprint $table) {
 			$table->increments('id');
-			$table->integer('query_id')->unsigned();
+			$table->integer('querytag_id')->unsigned();
 			$table->integer('ad_id')->unsigned();
 		});
 	}
 
 	public function down()
 	{
-		Schema::drop('ad_query');
+		Schema::drop('ad_querytag');
 	}
 }

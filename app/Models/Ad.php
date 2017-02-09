@@ -19,9 +19,9 @@ class Ad extends Model {
 		return $this->belongsTo('Owner');
 	}
 
-	public function tag()
+	public function querytag()
 	{
-		return $this->belongsToMany('Query');
+		return $this->belongsToMany('Querytag');
 	}
 
 }

@@ -1,0 +1,37 @@
+.btn-danger {
+    margin-top: 27px;
+}
+
+.btn-asterisk {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #636b6f;
+    margin-top: 27px;
+}
+
+label.required:after {
+    content:"*";
+    color:red;
+    font-weight: bold;
+}
+
+.newFields {
+    margin-bottom: 20px;
+}
+
+.newFields label {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.selectField {
+    margin-bottom: 10px;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    line-height: 1.6;
+    padding: 8px;
+    vertical-align: top;
+    border-top: 0 !important;
+    border-color: white;
+}

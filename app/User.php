@@ -29,9 +29,8 @@ class User extends Authenticatable
 
     public $timestamps = true;
 
-    public function ad()
-    {
-        return $this->hasMany('Ad');
+    public function template() {
+        return $this->hasMany('Template');
     }
 
 }

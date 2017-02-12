@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ad extends Model
+class Content extends Model
 {
-    protected $table = 'ads';
+    protected $table = 'contents';
     public $timestamps = true;
-
 }
-

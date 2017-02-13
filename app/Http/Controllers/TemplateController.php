@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class TemplateController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         //$this->middleware('auth');
@@ -48,17 +43,30 @@ class TemplateController extends Controller
             return redirect()->back()->with('error', 'Слишком много полей');
         }
 
-        /* Validation */
-        $validateRule = [];
+
+        /* Validate fields */
+
+        $validateRule = []; // Create array for rules
 
         foreach($inputs as $key => $value) {
-            $validateRule[$key] = 'required';
+            if ($key === 'queryName') {
+                $validateRule[$key] = 'required|min:5|max:255';
+            } elseif ($key === 'mainUrl') {
+                $validateRule[$key] = 'required|max:255';
+            } else {
+                $validateRule[$key] = 'required';
+            }
         }
 
         $validator = Validator::make($request->input(), $validateRule);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
+        }
+
+        $url = filter_var($request->input('mainUrl'), FILTER_VALIDATE_URL);
+        if ($url === false) {
+            return redirect()->back()->withErrors('Укажите правильный url');
         }
 
         /* Create new Template entry on DB and return own ID */

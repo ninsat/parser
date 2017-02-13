@@ -5,69 +5,58 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Parser;
-use App\Models\Ad;
 
 class ParserController extends Controller
 {
-    public function init(Request $request)
+    public function init()
     {
+        try {
+        $adNotProcessing = DB::table('ads')
+            ->select('id', 'ad_url', 'created_at')
+            ->where('fetched', '=', 0)
+            ->orderBy('created_at', 'asc')
+            ->take(100)
+            ->get();
 
-/*        $fields = DB::table('fields')
-            ->select('id', 'name', 'selector')
-            ->where('template_id', '=', $request->input('template_id'))
-            ->get();*/
+        } catch (\Exception $e) {
 
-        //$url = DB::table('fields')->where('name', 'mainUrl')->value('selector');
-        $InitUrl = 'https://www.olx.ua/list/q-%D0%B1%D1%80%D0%B8%D0%BB%D0%BB%D0%B8%D0%B0%D0%BD%D1%82%D1%8B/';
-        $paginateSelector = '.pager span a.lheight24';
-        $pagesSelector = 'h3.x-large a.detailsLink';
+            return $e->getMessage();
+        }
 
-/*        $curlOptions = [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_ENCODING => 'UTF-8',
-            CURLOPT_SSL_VERIFYPEER => true,
-        ];
+        var_dump($adNotProcessing);
 
-        $curlInit = curl_init();
-        curl_setopt_array($curlInit, $curlOptions);
-
-        $html = curl_exec($curlInit);
-
-        curl_close($curlInit);
-
-        var_dump($html);*/
-
-        $parser = new Parser();
-
-        $categoryPageUrls = $parser->getPaginatedUrl($InitUrl, $paginateSelector);
-        $pagesUrl = $parser->getUrlsFromCategory($categoryPageUrls, $pagesSelector);
-
-        var_dump($pagesUrl);
     }
 
-    public function listNewAds() {
-        $InitUrl = 'https://www.olx.ua/list/q-%D0%B1%D1%80%D0%B8%D0%BB%D0%BB%D0%B8%D0%B0%D0%BD%D1%82%D1%8B/';
-        $paginateSelector = '.pager span a.lheight24';
-        $pagesSelector = 'h3.x-large a.detailsLink';
+    public function listNewAds(Request $request) {
+        $fields = DB::table('fields')
+            ->select('id', 'name', 'selector')
+            ->where('template_id', '=', $request->input('template_id'))
+            ->get();
 
-/*        $parser = new Parser();
+        /* Create main selectors for parse start data */
+        $startUrlSelector = '';
+        $adUrlSelector = '';
+        $paginationSelector = '';
 
-        $categoryPageUrls = $parser->getPaginatedUrl($InitUrl, $paginateSelector);
-        $pagesUrl = $parser->getUrlsFromCategory($categoryPageUrls, $pagesSelector);*/
+        foreach ($fields as $field) {
+            if ($field->name === 'mainUrl') {
+                $startUrlSelector = $field->selector;
+            }
+
+            if ($field->name === 'paginate') {
+                $paginationSelector = $field->selector;
+            }
+
+            if ($field->name === 'adUrl') {
+                $adUrlSelector = $field->selector;
+            }
+        }
 
         $parser = new Parser();
 
-        $pagesUrl = [
-            0 => [0 => 'test1', 1 => 'test11'],
-            1 => [0 => 'test2', 1 => 'test22'],
-            2 => [0 => 'test3', 1 => 'test33'],
-            3 => [0 => 'test4', 1 => 'test44'],
-            3 => [0 => 'test5', 1 => 'test55'],
-
-        ];
-
-        $adsList = $parser->createAdWithUrl($pagesUrl, 1);
+        $categoryPageUrls = $parser->getPaginatedUrl($startUrlSelector, $paginationSelector);
+        $pagesUrl = $parser->getUrlsFromCategory($categoryPageUrls, $adUrlSelector);
+        $adsList = $parser->createAdWithUrl($pagesUrl, $request->input('template_id'));
 
         return view('parser.list-new-ads', ['ads' => $adsList]);
     }

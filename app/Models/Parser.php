@@ -95,30 +95,34 @@ class Parser extends Model
         foreach ($pagesUrl as $pages) {
             foreach ($pages as $adUrl) {
 
-                $urlFromDb = DB::table('ads')->where('additional_url', $adUrl)->value('additional_url');
+                $urlFromDb = DB::table('ads')->where('ad_url', $adUrl)->value('ad_url');
 
-                if (!empty($urlFromDb)) {
-                    break;
+                if (empty($urlFromDb)) {
+                    try {
+                        $ad = new Ad();
+
+                        $ad->ad_url = $adUrl;
+                        $ad->template_id = $templateId;
+                        $ad->fetched = 0;
+
+                        $ad->save();
+
+                        $arrayIDs[] = $ad->id;
+
+                    } catch (\Exception $e) {
+
+                        return $e->getMessage();
+                    }
+
                 }
 
-                try {
-                    $ad = new Ad();
-
-                    $ad->additional_url = $adUrl;
-                    $ad->template_id = $templateId;
-
-                    $ad->save();
-
-                    $arrayIDs[] = $ad->id;
-
-                } catch (\Exception $e) {
-                    return $e->getMessage();
-                }
             }
         }
 
+       // $ads = Ad::where('id', '=', $arrayIDs)->orderBy('created_at', 'DESC')->paginate(100);
+
         $newListAds = DB::table('ads')
-            ->select('id', 'additional_url', 'template_id')
+            ->select('id', 'ad_url', 'template_id')
             ->whereIn('id', $arrayIDs)
             ->get();
 

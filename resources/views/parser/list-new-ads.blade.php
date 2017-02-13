@@ -22,7 +22,7 @@
                                     {{$ad->id}}
                                 </td>
                                 <td>
-                                    {{$ad->additional_url}}
+                                    <a href="{{$ad->ad_url}}">{{$ad->ad_url}}</a>
                                 </td>
                                 {{--<td>
                                     <strong>{{$ad->template_id}}</strong>

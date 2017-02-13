@@ -23,6 +23,7 @@ Auth::routes();
 
 //Route::get('/dashboard', 'DashboardController@index');
 //Route::post('/parser', ['as' => 'auth::parser', 'uses' => 'ParserController@init', 'middleware' => 'auth']);
+Route::get('/parser', ['as' => 'auth::parser', 'uses' => 'ParserController@init', 'middleware' => 'auth']);
 Route::post('/parser/list-new-ads', ['as' => 'auth::parser-list-ads', 'uses' => 'ParserController@listNewAds', 'middleware' => 'auth']);
 
 Route::group(['as' => 'auth::', 'middleware' => 'auth'], function () {

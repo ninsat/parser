@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Field;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Template;
 use Illuminate\Support\Facades\Auth;
@@ -58,7 +58,7 @@ class TemplateController extends Controller
         $validator = Validator::make($request->input(), $validateRule);
 
         if ($validator->fails()) {
-            return redirect()->back()->with('error', 'Неправильно заполеные поля');
+            return redirect()->back()->withErrors($validator);
         }
 
         /* Create new Template entry on DB and return own ID */

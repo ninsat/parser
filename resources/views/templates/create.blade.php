@@ -4,6 +4,23 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            @if (Session::has('succes'))
+                <div class="alert alert-success">
+                    {!! Session::get('succes') !!}
+                </div>
+            @endif
+
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             {!! Form::open(['route' => 'auth::templates.store']) !!}
                 <div class="jumbotron">
                     <p>Создание парсинга</p>
@@ -29,11 +46,13 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">Доступные поля</div>
                             <div class="panel-body">
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="remoteIdFunction()">Remote ID</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="emailFunction()">Email</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="contactFunction()">Contact</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="textareaFunction()">Message</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="resetElements()">Reset</button></div>
+                        <div class="selectField"><button type="button" class="btn btn-info" onclick="remoteIdFunction()">Описание</button></div>
+                        <div class="selectField"><button type="button" class="btn btn-info" onclick="remoteIdFunction()">Обьявление от</button></div>
+                        <div class="selectField"><button type="button" class="btn btn-info" onclick="emailFunction()">Изображения</button></div>
+                        <div class="selectField"><button type="button" class="btn btn-info" onclick="contactFunction()">Дата обьявления</button></div>
+                        <div class="selectField"><button type="button" class="btn btn-info" onclick="resetElements()">Область</button></div>
+                        <div class="selectField"><button type="button" class="btn btn-info" onclick="textareaFunction()">Город</button></div>
+                        <div class="selectField"><button type="button" class="btn btn-info" onclick="resetElements()">Район</button></div>
                             </div>
                         </div>
                     </div>
@@ -42,14 +61,20 @@
                             <div class="panel-heading">Добавленые поля и настройка селекторов</div>
                             <div class="panel-body">
                                 <div id="creatorForm">
-                                    <div class="input-group newFields" id="urlField">
-                                        <label class="required" for="additionalUrl">Адрес дочерних страниц (Url):</label>
-                                        <input id="additionalUrl" class="form-control" value="h3.x-large" name="additionalUrl" type="text">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-asterisk" type="button">
-                                                <i class="fa fa-asterisk" aria-hidden="true"></i>
-                                            </button>
-                                        </span>
+                                    <div class="form-group newFields" id="adId">
+                                        <label class="required" for="adId">Номер объявления:</label>
+                                        <input id="adId" readonly class="form-control" value=".offer-titlebox__details > em > small" name="adId" type="text">
+                                        <span class="help-block">Селектор уникального ID обьявления.</span>
+                                    </div>
+                                    <div class="form-group newFields" id="urlField">
+                                        <label class="required" for="adUrl">Css селектор адреса обьявлений:</label>
+                                        <input id="adUrl" readonly class="form-control" value="h3.x-large a.detailsLink" name="adUrl" type="text">
+                                        <span class="help-block">Селектор должен указывать на html тег 'a', т. к. парсер выбирает href атрибут.</span>
+                                    </div>
+                                    <div class="form-group newFields" id="paginateField">
+                                        <label class="required" for="paginate">Css селектор пагинации в запросе:</label>
+                                        <input id="paginate" readonly class="form-control" value=".pager span a.lheight24" name="paginate" type="text">
+                                        <span class="help-block">Селектор должен указывать на html тег 'a', Значение пагинации должно указывать на первую страницу.</span>
                                     </div>
                                 </div>
                             </div>

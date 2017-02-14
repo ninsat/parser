@@ -16,7 +16,7 @@
                                     <strong>{{$template->name}}</strong>
                                 </td>
                                 <td>
-                                    {!! Form::open(['route' => 'auth::parser-list-ads']) !!}
+                                    {!! Form::open(['route' => 'auth::ads-fetch']) !!}
                                         <button name="template_id" value="{{$template->id}}" class="btn btn-default btn-xs" type="submit">Получить список новых обьявлений</button>
                                     {!! Form::close() !!}
                                 </td>

@@ -70,8 +70,8 @@ class Ad extends Model
 
         /* Save each ad to db with own url */
         $result = $this->bulkStoreAd($adUrls, $templateId);
-        var_dump($result); exit();
-        //return $result;
+
+        return $result;
     }
 
     public function getAdsUrls($paginationUrls, $adUrlSelector) {

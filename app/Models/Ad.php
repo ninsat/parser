@@ -58,7 +58,7 @@ class Ad extends Model
         /* Clean and settype to integer */
         $lastPaginationPage = (int)trim($lastPaginationPage);
 
-        /* Create array with links to category page */
+        /* Create array with links to category page, starts from first page to last page */
         $paginationUrls[1] = $startUrl;
 
         for ($i = 2; $i <= $lastPaginationPage; $i++) {
@@ -109,8 +109,9 @@ class Ad extends Model
 
                 $urlFromDb = DB::table('ads')->where('ad_url', $adUrl)->value('ad_url');
 
+                /* Save ad to DB and return own ID to array */
                 if (empty($urlFromDb)) {
-                    try {
+
                         $ad = new Ad();
 
                         $ad->ad_url = $adUrl;
@@ -120,12 +121,6 @@ class Ad extends Model
                         $ad->save();
 
                         $IdArray[] = $ad->id;
-
-                    } catch (\Exception $e) {
-
-                        return $e->getMessage();
-                    }
-
                 }
 
             }

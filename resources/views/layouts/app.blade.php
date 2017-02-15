@@ -57,6 +57,7 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+                            <li><a href="/ads/parse">Получить все обьявления</a></li>
                             <li><a href="/templates/create">Создать запрос</a></li>
                             <li><a href="/templates">Мои запросы</a></li>
                             <li class="dropdown">

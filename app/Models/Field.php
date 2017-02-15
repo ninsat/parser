@@ -28,8 +28,6 @@ class Field extends Model
             $field->save();
         }
 
-
-
         return true;
     }
 

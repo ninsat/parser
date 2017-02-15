@@ -8,9 +8,15 @@ use App\Models\Ad;
 
 class AdController extends Controller
 {
-    public function index()
+    public function parse()
     {
+        $ad = new Ad();
+        $ads = $ad->adsFilling();
 
+        echo "<pre>";
+        print_r($ads);
+        echo "</pre>";
+        //var_dump($ads);
     }
 
     public function fetch(Request $request)

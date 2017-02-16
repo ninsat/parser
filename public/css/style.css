@@ -15,6 +15,11 @@ label.required:after {
     font-weight: bold;
 }
 
+label.required {
+    font-size: 13px;
+    color: gray;
+}
+
 .newFields {
     margin-bottom: 20px;
 }
@@ -38,4 +43,9 @@ label.required:after {
 
 .help-block {
     font-size: 13px;
+}
+
+.jumbotron {
+    padding-bottom: 48px;
+    padding-top: 30px;
 }

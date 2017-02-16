@@ -32,41 +32,40 @@ class Ad extends Model
                 ->whereNotIn('name', ['mainUrl', 'adUrl', 'paginate']) // Исключаем не нужные нам поля
                 ->get();
 
-            /* Имея обьявление и принадлежащие к нему поля и паттерны начинаем парсинг */
+            /* Имея обьявление, принадлежащие к нему поля и паттерны начинаем парсинг */
             $html = Parser::htmlSource($ad->ad_url);
 
-            if (!empty($html)) {
-                $crawler = new Crawler($html);
-                
-                foreach ($fields as $field) {
-
-                    $fieldData = $crawler->filter($field->selector)->text();
-
-                    if (empty($fieldData)) {
-                        $fieldData = 'Пусто';
-                    }
-                    $content = new Content();
-
-                    $content->field_id = $field->id;
-                    $content->ad_id = $ad->id;
-                    $content->body = $fieldData;
-
-                    $content->save();
-
-                }
-
-
-
+            /* Если по текущему адресу уже нет страницы с обьявлением переходим к след. итерации */
+            if (empty($html)) {
+                continue;
             }
 
+            $crawler = new Crawler($html);
 
+            /* В цикле сохраняем в поля спарсенные данные текущего обьявления */
+            foreach ($fields as $field) {
 
+                $fieldData = $crawler->filter($field->selector)->text();
 
+                /* Создаем обьект Модели */
+                $content = new Content();
 
+                /* Наполняем */
+                $content->field_id = $field->id;
+                $content->ad_id = $ad->id;
+                $content->body = $fieldData;
 
+                /* Сохраняем */
+                $content->save();
+            }
+
+            /* Если все успешно обновляем статус обьявления */
+            DB::table('ads')
+                ->where('id', $ad->id)
+                ->update(['fetched' => 1]);
         }
 
-        return 'Успешно';
+        return true;
     }
 
     public function adsUrlsStore($templateId) {

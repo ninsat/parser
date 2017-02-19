@@ -8,6 +8,11 @@ use App\Models\Ad;
 
 class AdController extends Controller
 {
+    public function adsByTemplate() {
+
+        return view('ad.ads-by-template');
+    }
+
     public function parse()
     {
         $ad = new Ad();

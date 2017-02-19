@@ -13,13 +13,14 @@ class Ad extends Model
     public $timestamps = true;
 
     public function adsFilling() {
+        $fieldData = []; // Для тестирования
 
         /* Выбираем обьявления для которых еще не были получены данные из парсинга */
         $adNotProcessing = DB::table('ads')
             ->select('id', 'ad_url', 'template_id', 'created_at')
             ->where('fetched', '=', 0) //  Обьявление еще не заполненое данными
             ->orderBy('created_at', 'asc')
-            ->take(100) // Ограничение наполнения обявлений за один запуск скрипта
+            ->take(5) // Ограничение наполнения обявлений за один запуск скрипта
             ->get();
 
         /* Перебираем массив обьявлений и наполняем данными из парсинга */
@@ -45,27 +46,36 @@ class Ad extends Model
             /* В цикле сохраняем в поля спарсенные данные текущего обьявления */
             foreach ($fields as $field) {
 
-                $fieldData = $crawler->filter($field->selector)->text();
+                $fieldData[$ad->id][$field->name] = DataProcessing::processingData($crawler, $field, $ad->ad_url);
+
+                /* Поле требующее дополнительный запрос CURL */
+                if ($field->name === 'userTel') {
+                    $sourceContactPage = Parser::htmlSource($fieldData[$ad->id][$field->name], $ad->ad_url);
+                    $fieldData[$ad->id][$field->name] = DataProcessing::getUserTelephones($sourceContactPage);
+
+                }
+
+
 
                 /* Создаем обьект Модели */
-                $content = new Content();
+            //    $content = new Content();
 
                 /* Наполняем */
-                $content->field_id = $field->id;
-                $content->ad_id = $ad->id;
-                $content->body = $fieldData;
+            //    $content->field_id = $field->id;
+            //    $content->ad_id = $ad->id;
+            //    $content->body = $dataFieldNotProcessing;
 
                 /* Сохраняем */
-                $content->save();
+             //   $content->save();
             }
 
             /* Если все успешно обновляем статус обьявления */
-            DB::table('ads')
-                ->where('id', $ad->id)
-                ->update(['fetched' => 1]);
+            //DB::table('ads')
+            //    ->where('id', $ad->id)
+            //    ->update(['fetched' => 1]);
         }
 
-        return true;
+        return $fieldData;
     }
 
     public function adsUrlsStore($templateId) {

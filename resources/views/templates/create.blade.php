@@ -44,17 +44,6 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="required" for="sel1">Использовать прокси:</label>
-                                <select class="form-control" id="sel1">
-                                    <option>Прямой запрос</option>
-                                    <option disabled>Украина</option>
-                                    <option disabled>Россия</option>
-                                    <option disabled>Сша</option>
-                                    <option disabled>Германия</option>
-                                    <option disabled>Случайно</option>
-                                </select>
-                            </div>
                         </div>
                         <div class="col-md-1">
                         </div>
@@ -65,56 +54,94 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-7">
+                        <h4>Поля для парсинга</h4>
                         <div class="panel panel-default">
-                            <div class="panel-heading">Конструктор полей</div>
+                            <div class="panel-heading">Обязательные поля</div>
                             <div class="panel-body">
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="remoteIdFunction()">Описание</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="remoteIdFunction()">Обьявление от</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="emailFunction()">Изображения</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="contactFunction()">Дата обьявления</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="resetElements()">Область</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="textareaFunction()">Город</button></div>
-                        <div class="selectField"><button type="button" class="btn btn-info" onclick="resetElements()">Район</button></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Добавленые поля и настройка селекторов</div>
-                            <div class="panel-body">
-                                <div id="creatorForm">
-                                    <div class="form-group newFields" id="adId">
-                                        <label class="required" for="adId">Номер объявления:</label>
-                                        <input id="adId" readonly class="form-control" value=".offer-titlebox__details > em > small" name="adId" type="text">
-                                        <span class="help-block">Селектор уникального ID обьявления.</span>
-                                    </div>
-                                    <div class="form-group newFields" id="urlField">
+                                <div id="requiredFields">
+                                    <div class="form-group fields" id="urlField">
                                         <label class="required" for="adUrl">Адрес обьявлений:</label>
                                         <input id="adUrl" readonly class="form-control" value="h3.x-large a.detailsLink" name="adUrl" type="text">
                                         <span class="help-block">Селектор должен указывать на html тег 'a', т. к. парсер выбирает href атрибут.</span>
                                     </div>
-                                    <div class="form-group newFields" id="paginateField">
-                                        <label class="required" for="paginate">Пагинация в запросе ( используется при постраничном парсинге ):</label>
-                                        <input id="paginate" readonly class="form-control" value=".pager span a.lheight24" name="paginate" type="text">
-                                        <span class="help-block">Селектор должен указывать на html тег 'a', Значение пагинации должно указывать на первую страницу.</span>
+                                    <div class="form-group fields" id="adId">
+                                        <label class="required" for="adId">Номер объявления:</label>
+                                        <input id="adId" readonly class="form-control" value=".offer-titlebox__details > em > small" name="adId" type="text">
+                                        <span class="help-block">Селектор уникального ID обьявления.</span>
                                     </div>
-                                    <div class="form-group newFields" id="contacts">
-                                        <label class="required" for="paginate">Css селектор пагинации в запросе:</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Постраничный парсинг</div>
+                            <div class="panel-body">
+                                <div id="paginationFields">
+                                    <div class="form-group fields" id="urlField">
+                                        <label class="required" for="adUrl">Адрес обьявлений:</label>
+                                        <input id="adUrl" readonly class="form-control" value="h3.x-large a.detailsLink" name="adUrl" type="text">
+                                        <span class="help-block">Селектор должен указывать на html тег 'a', т. к. парсер выбирает href атрибут.</span>
+                                    </div>
+                                    <div class="form-group fields" id="paginateField">
+                                        <label class="required" for="paginate">Пагинация в запросе ( используется при постраничном парсинге ):</label>
                                         <input id="paginate" readonly class="form-control" value=".pager span a.lheight24" name="paginate" type="text">
                                         <span class="help-block">Селектор должен указывать на html тег 'a', Значение пагинации должно указывать на первую страницу.</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Поля контактных данных</div>
+                            <div class="panel-body">
+                                <div id="contactsGroup">
+                                    <div class="form-group fields" id="userIdField">
+                                        <label class="required" for="userId">ID пользователя olx.ua:</label>
+                                        <input id="userId" readonly class="form-control" value="#offeractions .user-offers" name="userId" type="text">
+                                    </div>
+                                    <div class="form-group fields" id="userNameField">
+                                        <label class="required" for="userName">Имя пользователя:</label>
+                                        <input id="userName" readonly class="form-control" value="#offeractions .offer-user__details h4" name="userName" type="text">
+                                    </div>
+                                    <div class="form-group fields" id="userTelField">
+                                        <label class="required" for="userTel">Телефон пользователя:</label>
+                                        <input id="userTel" readonly class="form-control" value="#contact_methods .link-phone" name="userTel" type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <h4>Дополнительные поля</h4>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Конструктор поля</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="sr-only" for="exampleInputEmail3">Email address</label>
+                                    <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Название поля (англ.)">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="exampleInputPassword3">Password</label>
+                                    <input type="password" class="form-control" id="exampleInputPassword3" placeholder="jQuery Селектор">
+                                </div>
+
+                                <button type="button" class="btn btn-info">Создать поле</button>
+
+                               {{-- <div class="selectField"><button type="button" class="btn btn-info" onclick="remoteIdFunction()">Описание</button></div>--}}
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Созданные поля</div>
+                            <div class="panel-body">
+                                <div class="creatorForm">
+                                Пока нет созданных полей
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-8">
-                    </div>
-                    <div class="col-md-4">
-                        {{ Form::submit('Сохранить запрос и перейти к парсингу', ['class' => 'btn btn-default']) }}
-                    </div>
+                    {{ Form::submit('Сохранить запрос и перейти к парсингу', ['class' => 'btn btn-danger center-block create-template']) }}
                 </div>
             {!! Form::close() !!}
         </div>

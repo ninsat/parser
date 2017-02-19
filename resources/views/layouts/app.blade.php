@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'CrawlerParser') }}</title>
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
@@ -87,6 +87,13 @@
 
         @yield('content')
     </div>
+    <footer class="main">
+        <div class="container">
+            <div class="copyright">
+                &copy; OlxParser 2017
+            </div>
+        </div>
+    </footer>
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>

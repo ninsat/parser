@@ -1,3 +1,14 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic,700italic&subset=cyrillic-ext,latin);
+@import url(https://fonts.googleapis.com/css?family=Raleway:100,600);
+
+body {
+    font-family: "Open Sans","Nimbus Sans L",sans-serif !important;
+}
+
+.navbar-brand {
+    font-family: 'Raleway', sans-serif;
+}
+
 .btn-danger {
     margin-top: 27px;
 }
@@ -20,13 +31,13 @@ label.required {
     color: gray;
 }
 
-.newFields {
+.fields {
     margin-bottom: 20px;
 }
 
-.newFields label {
+.fields label {
     font-weight: bold;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .selectField {
@@ -48,4 +59,20 @@ label.required {
 .jumbotron {
     padding-bottom: 48px;
     padding-top: 30px;
+    background-color: #d3e0e9;
+}
+
+footer.main {
+    background: #d3e0e9 none repeat scroll 0 0;
+    padding: 35px 20px;
+    text-align: center;
+    border-top: 1px solid #d3e0e9;
+}
+
+#app {
+    margin-bottom: 50px;
+}
+
+.create-template {
+
 }

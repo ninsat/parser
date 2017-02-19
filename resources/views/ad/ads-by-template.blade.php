@@ -4,33 +4,41 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="/">Главная</a></li>
+                <li><a href="/templates">Мои запросы</a></li>
+                <li><a href="/templates/{{$templateId}}/ads">{{$templateName}}</a></li>
+                <li>Обьявления</li>
+            </ol>
             <div class="panel panel-default">
-                <div class="panel-heading">Список новых обьявлений</div>
+                <div class="panel-heading"><strong>{{$templateName}}</strong> - cписок обработаных обьявлений</div>
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th><strong>ID</strong></th>
-                                    <th><strong>URL</strong></th>
+                                    <th><strong>Обьявление</strong></th>
+                                    <th><strong>Дата получения</strong></th>
                                 </tr>
                             </thead>
                             <tbody>
-                            {{--@foreach($ads as $ad)--}}
+                            @foreach($ads as $ad)
                             <tr>
                                 <td>
-                                  {{--  {{$ad->id}}--}}
+                                    {{$ad->id}}
                                 </td>
                                 <td>
-                                   {{-- <a href="{{$ad->ad_url}}">{{$ad->ad_url}}</a>--}}
+                                    <a href="{{$ad->ad_url}}">{{$ad->ad_url}}</a>
                                 </td>
-                                {{--<td>
-                                    <strong>{{$ad->template_id}}</strong>
-                                </td>--}}
+                                <td>
+                                    {{$ad->created_at}}
+                                </td>
                             </tr>
-                           {{-- @endforeach--}}
+                           @endforeach
                             </tbody>
                         </table>
+                        {{ $ads->links() }}
                     </div>
                 </div>
             </div>

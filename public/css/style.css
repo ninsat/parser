@@ -76,3 +76,23 @@ footer.main {
 .create-template {
 
 }
+
+.breadcrumb {
+    background-color: #d3e0e9 !important;
+}
+
+.breadcrumb a {
+    color: #3097d1;
+    text-decoration: none;
+}
+
+.breadcrumb > li + li::before {
+    color: white;
+    content: "/ ";
+    padding: 0 5px;
+}
+
+a.list-badge {
+    margin-bottom: 5px;
+    display: inline-block;
+}

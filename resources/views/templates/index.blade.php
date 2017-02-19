@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li><a href="/">Главная</a></li>
-                <li><a class="active" href="#">Список запросов</a></li>
+                <li><a class="active" href="/templates">Мои запросы</a></li>
             </ol>
             @foreach($templates as $template)
                 <div class="panel panel-default">
@@ -18,9 +18,9 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <a href="#">Всего обработаных <span class="badge">5</span></a><br>
-                                <a href="#">Новые за сегодня <span class="badge">10</span></a><br>
-                                <a href="#">Пропущенные <span class="badge">2</span></a>
+                                <a class="list-badge" href="#">Обьявлений обработано: <span class="badge">{{$template->adsProcessed}}</span></a><br>
+                                <a class="list-badge" href="#">Обьявлений в очереди: <span class="badge">{{$template->adsNotProcessed}}</span></a><br>
+                                <a class="list-badge" href="#">Обьявлений удалено: <span class="badge">2</span></a>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">

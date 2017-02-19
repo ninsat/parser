@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ad;
 use App\Models\Field;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -24,7 +25,14 @@ class TemplateController extends Controller
             ->where('user_id', '=', Auth::user()->id)
             ->get();
 
+        /* Статистика запроса */
+        foreach ($templates as $template) {
+            $template->adsProcessed = Ad::where('fetched', 1)->where('template_id', $template->id)->count();
+            $template->adsNotProcessed = Ad::where('fetched', 0)->where('template_id', $template->id)->count();
+        }
+
         return view('templates.index', ['templates' => $templates]);
+
     }
 
     public function create()

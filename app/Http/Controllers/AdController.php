@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Ad;
+use App\Models\Template;
 
 class AdController extends Controller
 {
-    public function adsByTemplate() {
+    public function adsByTemplate(Request $request) {
 
-        return view('ad.ads-by-template');
+        $ads = Ad::where('fetched', '=', 1)->where('template_id', '=', $request->id)->paginate(50);
+        $template = Template::where('id', '=', $request->id)->firstOrFail();
+
+        return view('ad.ads-by-template', [
+            'ads' => $ads,
+            'templateName' => $template->name,
+            'templateId' => $template->id
+        ]);
+
     }
 
     public function parse()

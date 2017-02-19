@@ -16,6 +16,13 @@ class DataProcessing extends Model
 
         /* ID  Обьявления */
         if ($field->name === 'adId') {
+
+            // Проверка на пустое значение
+            $count = $crawler->filter($field->selector)->count();
+            if($count < 1) {
+                return false;
+            }
+
             /* Получение данных из селектора */
             $parsedData = $crawler->filter($field->selector)->text();
 
@@ -30,6 +37,14 @@ class DataProcessing extends Model
 
         /* Имя пользователя */
         if ($field->name === 'userName') {
+
+            // Проверка на пустое значение
+            $count = $crawler->filter($field->selector)->count();
+            if($count < 1) {
+                return false;
+            }
+
+            // Получение результата
             $parsedData = $crawler->filter($field->selector)->first()->text();
             $result = trim($parsedData);
 
@@ -38,7 +53,15 @@ class DataProcessing extends Model
 
         /* ID Пользователя */
         if ($field->name === 'userId') {
+
+            // Проверка на пустое значение
+            $count = $crawler->filter($field->selector)->count();
+            if($count < 1) {
+                return false;
+            }
+
             $parsedData = $crawler->filter($field->selector)->attr('href');
+
             $parsedData = explode('/', trim($parsedData, '/'));
             $result = $parsedData[count($parsedData) - 1];
 
@@ -47,6 +70,12 @@ class DataProcessing extends Model
 
         /* URL для запроса на страницу телефонов пользователя */
         if ($field->name === 'userTel') {
+
+            // Проверка на пустое значение
+            $count = $crawler->filter($field->selector)->count();
+            if($count < 1) {
+                return false;
+            }
 
             $parsedData = $crawler->filter($field->selector)->attr('class');
 
@@ -92,7 +121,8 @@ class DataProcessing extends Model
             $result = json_encode($userTel);
 
         } else {
-            $result = str_replace(' ', '', $userTel);
+            $tmp = str_replace(' ', '', $userTel);
+            $result = json_encode($tmp);
         }
 
         return $result;

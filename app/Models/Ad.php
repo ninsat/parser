@@ -14,13 +14,15 @@ class Ad extends Model
 
     public function adsFilling() {
        // $fieldData = []; // Для тестирования
+        $idArray = [];
 
         /* Выбираем обьявления для которых еще не были получены данные из парсинга */
         $adNotProcessing = DB::table('ads')
             ->select('id', 'ad_url', 'template_id', 'created_at')
             ->where('fetched', '=', 0) //  Обьявление еще не заполненое данными
+            ->where('ignored', '=', 0)
             ->orderBy('created_at', 'asc')
-            ->take(25) // Ограничение наполнения обявлений за один запуск скрипта
+            ->take(20) // Ограничение наполнения обявлений за один запуск скрипта
             ->get();
 
         /* Перебираем массив обьявлений и наполняем данными из парсинга */
@@ -36,8 +38,17 @@ class Ad extends Model
             /* Имея обьявление, принадлежащие к нему поля и паттерны начинаем парсинг */
             $html = Parser::htmlSource($ad->ad_url);
 
-            /* Если по текущему адресу уже нет страницы с обьявлением переходим к след. итерации */
+            /* Если по текущему адресу уже нет страницы с обьявлением, устанавливает флаг "Проигнорированное"
+            *  и переходим к след. итерации
+            */
             if (empty($html)) {
+
+                DB::table('ads')
+                    ->where('id', $ad->id)
+                    ->update(['ignored' => 1]);
+
+                $idArray['ignored'][] = $ad->id;
+
                 continue;
             }
 
@@ -77,9 +88,11 @@ class Ad extends Model
             DB::table('ads')
                 ->where('id', $ad->id)
                 ->update(['fetched' => 1]);
+
+            $idArray['fetched'][] = $ad->id;
         }
 
-        return true;
+        return $idArray;
     }
 
     public function adsUrlsStore($templateId) {
@@ -116,16 +129,16 @@ class Ad extends Model
 
         $requestPattern = '?page=';
 
-        /* Get html source of page */
+        /* Получаем HTML исходник текущей страницы */
         $html = Parser::htmlSource($startUrl);
 
-        /* Get last pagination element */
+        /* Получаем последний элемент пагинации */
         $crawler = new Crawler($html);
 
         $lastPaginationPage = $crawler->filter($paginationSelector)
             ->last()->text();
 
-        /* Clean and settype to integer */
+        /* Чистим и приводим к числовому типу */
         $lastPaginationPage = (int)trim($lastPaginationPage);
 
         /* Create array with links to category page, starts from first page to last page */
@@ -150,10 +163,10 @@ class Ad extends Model
 
         foreach ($paginationUrls as $url) {
 
-            /* Get html source of page */
+            /* Получаем HTML исходник текущей страницы */
             $html = Parser::htmlSource($url);
 
-            /* Get All Url from title */
+            /* Получаем URL адреса из Названий обьявлений */
             $crawler = new Crawler($html);
 
             $adUrls[] = $crawler->filter($adUrlSelector)

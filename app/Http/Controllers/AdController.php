@@ -66,6 +66,7 @@ class AdController extends Controller
      * */
     public function parse()
     {
+
         $ad = new Ad();
         $ads = $ad->adsFilling();
 

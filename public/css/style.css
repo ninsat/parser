@@ -83,15 +83,16 @@ footer.main {
 
 .breadcrumb {
     background-color: #d3e0e9 !important;
+    color: black;
 }
 
 .breadcrumb a {
-    color: #3097d1;
+    color: black;
     text-decoration: none;
 }
 
 .breadcrumb > li + li::before {
-    color: white;
+    color: black;
     content: "/ ";
     padding: 0 5px;
 }

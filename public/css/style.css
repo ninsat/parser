@@ -3,6 +3,9 @@
 
 body {
     font-family: "Open Sans","Nimbus Sans L",sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .navbar-brand {
@@ -71,6 +74,7 @@ footer.main {
 
 #app {
     margin-bottom: 50px;
+    flex: 1 !important;
 }
 
 .create-template {
@@ -95,4 +99,8 @@ footer.main {
 a.list-badge {
     margin-bottom: 5px;
     display: inline-block;
+}
+
+.fixHeight {
+    height: 50vh;
 }

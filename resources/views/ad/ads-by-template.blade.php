@@ -6,12 +6,15 @@
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li><a href="/">Главная</a></li>
-                <li><a href="/templates">Мои запросы</a></li>
-                <li><a href="/templates/{{$templateId}}/ads">{{$templateName}}</a></li>
-                <li>Обьявления</li>
+                <li><a href="/templates/">Мои запросы</a></li>
+                <li><a href="/template/{{$template->id}}/ads">{{$template->name}}</a></li>
+                <li>Полученые обьявления</li>
             </ol>
             <div class="panel panel-default">
-                <div class="panel-heading"><strong>{{$templateName}}</strong> - cписок обработаных обьявлений</div>
+                <div class="panel-heading">
+                    <strong>{{$template->name}}</strong> - cписок обработаных обьявлений
+                    <strong>(всего {{$stat}})</strong>
+                </div>
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table">
@@ -29,7 +32,8 @@
                                     {{$ad->id}}
                                 </td>
                                 <td>
-                                    <a href="{{$ad->ad_url}}">{{$ad->ad_url}}</a>
+                                    <i class="fa fa-link" aria-hidden="true"></i>
+                                    <a href="/template/{{$template->id}}/ads/{{$ad->id}}">{{$ad->ad_url}}</a>
                                 </td>
                                 <td>
                                     {{$ad->created_at}}

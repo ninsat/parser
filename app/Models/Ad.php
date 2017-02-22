@@ -159,7 +159,7 @@ class Ad extends Model
             $adUrls[] = $crawler->filter($adUrlSelector)
                 ->each(function (Crawler $node) {
 
-                    /* filter every title and get href element */
+                    /* Фильтруем каждое название обьявления на olx и возвращаем ссылку на него */
                     $href = explode('#', $node->attr('href'));
                     return $href[0];
 
@@ -171,7 +171,7 @@ class Ad extends Model
 
     protected function bulkStoreAd($adUrls, $templateId) {
 
-        /* Array for new inserted ads ID */
+        /* Массив содержащий IDшники сохраненных обьявлений */
         $IdArray = [];
 
         foreach ($adUrls as $pages) {
@@ -179,7 +179,7 @@ class Ad extends Model
 
                 $urlFromDb = DB::table('ads')->where('ad_url', $adUrl)->value('ad_url');
 
-                /* Save ad to DB and return own ID to array */
+                /* Сохраняем обьявление в БД и возвращаем его ID */
                 if (empty($urlFromDb)) {
 
                         $ad = new Ad();
@@ -196,12 +196,55 @@ class Ad extends Model
             }
         }
 
-        $result = DB::table('ads')
-            ->select('id', 'ad_url', 'template_id')
-            ->whereIn('id', $IdArray)
-            ->get();
+       // $result = DB::table('ads')
+       //    ->select('id', 'ad_url', 'template_id')
+       //    ->whereIn('id', $IdArray)
+       //    ->get();
+
+        return count($IdArray);
+    }
+
+    /*
+     * Получение обработаных обьявлений по Id шаблона
+     * */
+    public static function listAdsByTemplate($templateId) {
+        $result = Ad::where('fetched', '=', 1)->where('template_id', '=', $templateId)->paginate(50);
 
         return $result;
+    }
+
+    /*
+     * Получение одного обьявления по его ID и ID шаблона
+     * */
+    public static function adByTemplateByAdId($templateId, $adId) {
+        $result = Ad::where('id', '=', $adId)->where('template_id', '=', $templateId)->firstOrFail();
+
+        return $result;
+    }
+
+    /*
+     * Получение обьявлений поставленных в очередь по ID шаблона
+     * */
+    public static function listQueueAdsByTemplate($templateId) {
+        $result = $result = Ad::where('fetched', '=', 0)->where('template_id', '=', $templateId)->paginate(50);
+
+        return $result;
+    }
+
+    /*
+     * Статистика по конкретному шаблону
+     * */
+    public static function templateStatistics($templateId)
+    {
+        $statistics = [];
+
+        /* Количество успешных */
+        $statistics['adsDone'] = Ad::where('fetched', 1)->where('template_id', $templateId)->count();
+
+        /* Количество поставленных в очередь */
+        $statistics['adsQueue'] = Ad::where('fetched', 0)->where('template_id', $templateId)->count();
+
+        return $statistics;
     }
 
 }

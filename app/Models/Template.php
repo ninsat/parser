@@ -34,4 +34,11 @@ class Template extends Model
     public function prepare($data) {
         return $data;
     }
+
+    public static function templateInfoFormId($templateId)
+    {
+        $result = Template::where('id', '=', $templateId)->firstOrFail();
+
+        return $result;
+    }
 }

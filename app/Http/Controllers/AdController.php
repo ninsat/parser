@@ -9,19 +9,61 @@ use App\Models\Template;
 
 class AdController extends Controller
 {
-    public function adsByTemplate(Request $request) {
 
-        $ads = Ad::where('fetched', '=', 1)->where('template_id', '=', $request->id)->paginate(50);
-        $template = Template::where('id', '=', $request->id)->firstOrFail();
+    /*
+     * Контроллер страницы с детальным описанием обьявления
+     * Ex: /template/{templateId}/ads/{adId}
+     *
+     * */
+    public function index(Request $request) {
+        $ad = Ad::adByTemplateByAdId($request->templateId, $request->adId);
+        $template = Template::templateInfoFormId($request->templateId);
 
-        return view('ad.ads-by-template', [
-            'ads' => $ads,
-            'templateName' => $template->name,
-            'templateId' => $template->id
+        return view('ad.index', ['ad' => $ad, 'template' => $template]);
+    }
+
+    /*
+     * Контроллер страницы со списком всех спарсеных обьявлений для этого шаблона
+     * Ex: /template/{templateId}/ads/
+     *
+     * */
+    public function adsListDone(Request $request)
+    {
+
+        $ads = Ad::listAdsByTemplate($request->templateId);
+        $template = Template::templateInfoFormId($request->templateId);
+
+        /* Статистика */
+        $stat = Ad::templateStatistics($request->templateId);
+
+        return view('ad.ads-by-template', ['ads' => $ads,
+            'template' => $template,
+            'stat' => $stat['adsDone']
         ]);
 
     }
 
+    /*
+     * Контроллер страницы со списком всех обьявлений шаблона поставленных в очередь на обработку
+     * Ex: /template/{templateId}/ads-queue/
+     *
+     * */
+    public function adsListQueue (Request $request)
+    {
+        $ads = Ad::listQueueAdsByTemplate($request->templateId);
+        $template = Template::templateInfoFormId($request->templateId);
+
+        /* Статистика */
+        $stat = Ad::templateStatistics($request->templateId);
+
+        return view('ad.ads-queue', ['ads' => $ads, 'template' => $template, 'stat' => $stat['adsQueue']]);
+    }
+
+    /*
+     * Контроллер отвечающий за парсинг всех обьявлений и всех полей по очереди
+     * В дальнейшем должен дергаться по крону
+     *
+     * */
     public function parse()
     {
         $ad = new Ad();
@@ -30,15 +72,19 @@ class AdController extends Controller
         echo "<pre>";
         print_r($ads);
         echo "</pre>";
-        //var_dump($ads);
     }
 
+
+    /*
+     * Контроллер создает первую запись обьявления в БД и ставит обьявление в очередь на парсинг
+     *
+     * */
     public function fetch(Request $request)
     {
+
         $validator = Validator::make($request->input(), [
             'template_id' => 'required|numeric|min:1|max:5',
         ]);
-
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
@@ -48,6 +94,7 @@ class AdController extends Controller
 
         $adList = $ad->adsUrlsStore($request->input('template_id'));
 
-        return view('ad.fetch', ['ads' => $adList]);
+        return redirect()->back()->with('succes', 'Поставлено в очередь ' . $adList . ' обьявлений');
+
     }
 }

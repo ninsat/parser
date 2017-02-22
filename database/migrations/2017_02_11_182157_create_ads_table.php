@@ -19,6 +19,7 @@ class CreateAdsTable extends Migration
             $table->foreign('template_id')->references('id')->on('templates')->onDelete('cascade');
             $table->string('ad_url', 255)->nullable()->index();
             $table->boolean('fetched')->default(false);
+            $table->boolean('ignored')->default(false);
             $table->timestamps();
         });
     }

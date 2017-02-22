@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\DB;
 
 class TemplateController extends Controller
 {
-    public function __construct()
-    {
-        //$this->middleware('auth');
-    }
-
+    /*
+     * Страницы со списком Шаблонов
+     * Ex: template/1
+     *
+     * */
     public function index()
     {
         $templates = DB::table('templates')
@@ -31,20 +31,35 @@ class TemplateController extends Controller
             $template->adsNotProcessed = Ad::where('fetched', 0)->where('template_id', $template->id)->count();
         }
 
+        if (empty($template)) {
+            return view('templates.no-result', ['templates' => $templates]);
+        }
+
         return view('templates.index', ['templates' => $templates]);
 
     }
 
+    /*
+     * Страница создания шаблона (Создание парсинга)
+     * Ex: templates/create
+     *
+     * */
     public function create()
     {
         return view('templates.create');
     }
 
-    public function store(Request $request, Template $template, Field $field) {
+
+    /*
+     * Контроллер сохранения шаблона в базу
+     *
+     * */
+    public function store(Request $request, Template $template, Field $field)
+    {
 
         $inputs = $request->input();
 
-        /* Remove not for fields request*/
+        /* Удаляем лишний запрос */
         unset($inputs['_token']);
 
         if (count($inputs) > 20) {
@@ -52,11 +67,11 @@ class TemplateController extends Controller
         }
 
 
-        /* Validate fields */
+        /* Валидация запросов */
 
-        $validateRule = []; // Create array for rules
+        $validateRule = []; // Массив для правил валидации
 
-        foreach($inputs as $key => $value) {
+        foreach ($inputs as $key => $value) {
             if ($key === 'queryName') {
                 $validateRule[$key] = 'required|min:5|max:255';
             } elseif ($key === 'mainUrl') {
@@ -77,16 +92,22 @@ class TemplateController extends Controller
             return redirect()->back()->withErrors('Укажите правильный url');
         }
 
-        /* Create new Template entry on DB and return own ID */
+        /* Создание новой записи шаблона в БД и возвращение ID этой записи */
         $id = $template->createNewTemplate($request->input('queryName'));
 
         /* Create new Fields entry with reference to Template on DB */
         unset($inputs['queryName']);
         $field->createNewField($inputs, $id);
 
+        /* Если успешно возвращаемся на страницу своих шаблонов */
         return redirect('/templates');
     }
 
+    /*
+     * Удаление записи шаблона и всего его содержимого из БД
+     * !!!(в том числе и обьявления будут удалены по Каскаду)
+     *
+     * */
     public function destroy($id)
     {
         $template = Template::find($id);

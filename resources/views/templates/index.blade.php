@@ -6,8 +6,15 @@
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li><a href="/">Главная</a></li>
-                <li><a class="active" href="/templates">Мои запросы</a></li>
+                <li>Мои запросы</li>
             </ol>
+
+            @if (Session::has('succes'))
+                <div class="alert alert-success">
+                    {!! Session::get('succes') !!}
+                </div>
+            @endif
+
             @foreach($templates as $template)
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -18,9 +25,9 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-4">
-                                <a class="list-badge" href="#">Обьявлений обработано: <span class="badge">{{$template->adsProcessed}}</span></a><br>
-                                <a class="list-badge" href="#">Обьявлений в очереди: <span class="badge">{{$template->adsNotProcessed}}</span></a><br>
-                                <a class="list-badge" href="#">Обьявлений удалено: <span class="badge">2</span></a>
+                                <a class="list-badge" href="/template/{{$template->id}}/ads">Обьявлений обработано: <span class="badge">{{$template->adsProcessed}}</span></a><br>
+                                <a class="list-badge" href="/template/{{$template->id}}/ads-queue">Обьявлений в очереди: <span class="badge">{{$template->adsNotProcessed}}</span></a><br>
+                                <a class="list-badge" href="#">Проигнорировано: <span class="badge">2</span></a>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -40,14 +47,14 @@
                                 <button name="" data-toggle="collapse" data-target="#subscribe_{{$template->id}}" class="btn btn-info btn-sm" type="button">Подписаться</button>
                                 <div id="subscribe_{{$template->id}}" class="collapse">
                                     <p>
-                                        <div class="form-inline">
-                                            <input id="subscribe" name="subscribe" placeholder="example@email.com" class="form-control input-sm" type="email">
-                                            <button name="" value="" class="btn btn-default btn-sm" type="submit">Ok</button>
-                                        </div>
+                                    <div class="form-inline">
+                                        <input id="subscribe" name="subscribe" placeholder="example@email.com" class="form-control input-sm" type="email">
+                                        <button name="" value="" class="btn btn-default btn-sm" type="submit">Ok</button>
+                                    </div>
                                     </p>
                                 </div>
                             </div>
-                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <button class="btn btn-default btn-sm" data-toggle="collapse" data-target="#export_{{$template->id}}">Экспорт обработаных обьявлений</button>
@@ -63,10 +70,8 @@
                             </div>
                         </div>
                     </div>
-                    </div>
-                <div>
+                </div>
             @endforeach
-            </div>
         </div>
     </div>
 </div>

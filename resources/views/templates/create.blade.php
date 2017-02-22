@@ -60,14 +60,9 @@
                             <div class="panel-heading">Обязательные поля</div>
                             <div class="panel-body">
                                 <div id="requiredFields">
-                                    <div class="form-group fields" id="urlField">
-                                        <label class="required" for="adUrl">Адрес обьявлений:</label>
-                                        <input id="adUrl" readonly class="form-control" value="h3.x-large a.detailsLink" name="adUrl" type="text">
-                                        <span class="help-block">Селектор должен указывать на html тег 'a', т. к. парсер выбирает href атрибут.</span>
-                                    </div>
                                     <div class="form-group fields" id="adId">
                                         <label class="required" for="adId">Номер объявления:</label>
-                                        <input id="adId" readonly class="form-control" value=".offer-titlebox__details > em > small" name="adId" type="text">
+                                        <input id="adId" readonly class="form-control input-sm" value=".offer-titlebox__details > em > small" name="adId" type="text">
                                         <span class="help-block">Селектор уникального ID обьявления.</span>
                                     </div>
                                 </div>
@@ -80,12 +75,12 @@
                                 <div id="paginationFields">
                                     <div class="form-group fields" id="urlField">
                                         <label class="required" for="adUrl">Адрес обьявлений:</label>
-                                        <input id="adUrl" readonly class="form-control" value="h3.x-large a.detailsLink" name="adUrl" type="text">
+                                        <input id="adUrl" readonly class="form-control input-sm" value="h3.x-large a.detailsLink" name="adUrl" type="text">
                                         <span class="help-block">Селектор должен указывать на html тег 'a', т. к. парсер выбирает href атрибут.</span>
                                     </div>
                                     <div class="form-group fields" id="paginateField">
                                         <label class="required" for="paginate">Пагинация в запросе ( используется при постраничном парсинге ):</label>
-                                        <input id="paginate" readonly class="form-control" value=".pager span a.lheight24" name="paginate" type="text">
+                                        <input id="paginate" readonly class="form-control input-sm" value=".pager span a.lheight24" name="paginate" type="text">
                                         <span class="help-block">Селектор должен указывать на html тег 'a', Значение пагинации должно указывать на первую страницу.</span>
                                     </div>
                                 </div>
@@ -97,15 +92,15 @@
                                 <div id="contactsGroup">
                                     <div class="form-group fields" id="userIdField">
                                         <label class="required" for="userId">ID пользователя olx.ua:</label>
-                                        <input id="userId" readonly class="form-control" value="#offeractions .user-offers" name="userId" type="text">
+                                        <input id="userId" readonly class="form-control input-sm" value="#offeractions .user-offers" name="userId" type="text">
                                     </div>
                                     <div class="form-group fields" id="userNameField">
                                         <label class="required" for="userName">Имя пользователя:</label>
-                                        <input id="userName" readonly class="form-control" value="#offeractions .offer-user__details h4" name="userName" type="text">
+                                        <input id="userName" readonly class="form-control input-sm" value="#offeractions .offer-user__details h4" name="userName" type="text">
                                     </div>
                                     <div class="form-group fields" id="userTelField">
                                         <label class="required" for="userTel">Телефон пользователя:</label>
-                                        <input id="userTel" readonly class="form-control" value="#contact_methods .link-phone" name="userTel" type="text">
+                                        <input id="userTel" readonly class="form-control input-sm" value="#contact_methods .link-phone" name="userTel" type="text">
                                     </div>
                                 </div>
                             </div>
@@ -118,14 +113,14 @@
                             <div class="panel-body">
                                 <div class="form-group">
                                     <label class="sr-only" for="exampleInputEmail3">Email address</label>
-                                    <input type="email" class="form-control" id="exampleInputEmail3" placeholder="Название поля (англ.)">
+                                    <input type="email" class="form-control input-sm" id="exampleInputEmail3" placeholder="Название поля (англ.)">
                                 </div>
                                 <div class="form-group">
                                     <label class="sr-only" for="exampleInputPassword3">Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword3" placeholder="jQuery Селектор">
+                                    <input type="password" class="form-control input-sm" id="exampleInputPassword3" placeholder="jQuery Селектор">
                                 </div>
 
-                                <button type="button" class="btn btn-info">Создать поле</button>
+                                <button type="button" class="btn btn-info btn-sm">Создать поле</button>
 
                                {{-- <div class="selectField"><button type="button" class="btn btn-info" onclick="remoteIdFunction()">Описание</button></div>--}}
                             </div>
@@ -141,7 +136,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    {{ Form::submit('Сохранить запрос и перейти к парсингу', ['class' => 'btn btn-danger center-block create-template']) }}
+                    {{ Form::submit('Сохранить запрос и перейти к парсингу', ['class' => 'btn btn-primary btn-sm center-block create-template']) }}
                 </div>
             {!! Form::close() !!}
         </div>

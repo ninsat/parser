@@ -29,6 +29,7 @@ class TemplateController extends Controller
         foreach ($templates as $template) {
             $template->adsProcessed = Ad::where('fetched', 1)->where('template_id', $template->id)->count();
             $template->adsNotProcessed = Ad::where('fetched', 0)->where('template_id', $template->id)->count();
+            $template->adsIgnored = Ad::where('ignored', 1)->where('template_id', $template->id)->count();
         }
 
         if (empty($template)) {

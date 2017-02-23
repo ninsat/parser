@@ -27,7 +27,7 @@
                             <div class="col-md-4">
                                 <a class="list-badge" href="/template/{{$template->id}}/ads">Обьявлений обработано: <span class="badge">{{$template->adsProcessed}}</span></a><br>
                                 <a class="list-badge" href="/template/{{$template->id}}/ads-queue">Обьявлений в очереди: <span class="badge">{{$template->adsNotProcessed}}</span></a><br>
-                                <a class="list-badge" href="#">Проигнорировано: <span class="badge">2</span></a>
+                                <a class="list-badge" href="/template/{{$template->id}}/ads-ignored">Проигнорировано: <span class="badge">{{$template->adsIgnored}}</span></a>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">

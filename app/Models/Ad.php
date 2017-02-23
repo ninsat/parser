@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;
 use Illuminate\Support\Facades\DB;
 use App\Models\Content;
@@ -227,12 +228,41 @@ class Ad extends Model
     }
 
     /*
-     * Получение одного обьявления по его ID и ID шаблона
+     * Получение одного обьявления со всеми полями и данными по его ID и ID шаблона
      * */
     public static function adByTemplateByAdId($templateId, $adId) {
-        $result = Ad::where('id', '=', $adId)->where('template_id', '=', $templateId)->firstOrFail();
 
-        return $result;
+        $ad = Ad::where('id', '=', $adId)->where('template_id', '=', $templateId)->firstOrFail();
+
+        $fieldTemplates = DB::table('fields')
+            ->select('id', 'name')
+            ->where('template_id', $templateId)
+            ->get();
+
+        /* Получаем из коллекции все ID полей */
+        $fieldTemplatesId = $fieldTemplates->pluck('id');
+
+        /* Выбираем все данные для этого обьявления */
+        $contentsData = DB::table('contents')
+            ->where('ad_id', $ad->id)
+            ->whereIn('field_id', $fieldTemplatesId)
+            ->get();
+
+        $data = [];
+
+        foreach ($fieldTemplates as $fieldTemplate) {
+            foreach ($contentsData as $fieldValue) {
+                if ($fieldTemplate->id === $fieldValue->field_id) {
+                    $data[$fieldTemplate->name]['field'] = $fieldTemplate;
+                    $data[$fieldTemplate->name]['data'] = $fieldValue;
+                }
+            }
+        }
+
+        /* Добавляем в атрибуты обьекта не "оригинальные" данные */
+        $ad->fields = $data;
+
+        return $ad;
     }
 
     /*
@@ -256,6 +286,9 @@ class Ad extends Model
 
         /* Количество поставленных в очередь */
         $statistics['adsQueue'] = Ad::where('fetched', 0)->where('template_id', $templateId)->count();
+
+        /* Количество проигнорированных */
+        $statistics['adsIgnored'] = Ad::where('ignored', 1)->where('template_id', $templateId)->count();
 
         return $statistics;
     }

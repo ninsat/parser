@@ -82,7 +82,7 @@ footer.main {
 }
 
 .breadcrumb {
-    background-color: white !important;
+    background-color: unset !important;
     color: black;
 }
 

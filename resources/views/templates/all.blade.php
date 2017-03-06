@@ -28,7 +28,7 @@
                             <div class="col-md-4">
 
                                 @if($template->countAdsParsed === 0)
-                                    Обьявлений обработано: <span class="badge">{{$template->countAdsParsed}}</span>
+                                    Обьявлений обработано: <span class="badge">{{$template->countAdsParsed}}</span><br>
                                 @else
                                     <a class="list-badge" href="/template/{{$template->id}}/ads">Обьявлений обработано: <span class="badge">{{$template->countAdsParsed}}</span></a><br>
                                 @endif

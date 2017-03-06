@@ -123,11 +123,19 @@ class AdController extends Controller
         $paginate = $request->paginate;
         $object = $request->object;
         $templateId = (int) $request->export_template;
+        $count = $request->count;
+        $additional = $request->additional;
 
         $error = []; // Массив для ошибок
 
-        if (empty($type) && empty($paginate) && empty($object) && empty($templateId)) {
-            $error[] = 'Не переданы необходимые значения для Эекспорта';
+        if ($count === 'manual' && isset($request->quantity)) {
+            $count = (int) $request->quantity;
+        } else {
+            $count = 'all';
+        }
+
+        if (empty($additional) && empty($count) && empty($type) && empty($paginate) && empty($object) && empty($templateId)) {
+            $error[] = 'Не переданы необходимые значения для Экспорта';
         }
 
         if (!is_integer($templateId)) {
@@ -136,7 +144,7 @@ class AdController extends Controller
 
         $ad = new Ad();
 
-        $exportedAds = $ad->export($templateId, $object, $type, $paginate);
+        $exportedAds = $ad->export($templateId, $object, $count, $type, $additional);
 
         if (!$exportedAds) {
             return redirect()->back()->with('errors', 'Нечего экспортировать');
@@ -145,7 +153,10 @@ class AdController extends Controller
         if (count($error) > 0) {
             return false;
         }
-
+/*        echo '<pre>';
+        print_r($exportedAds);
+        echo '<pre>';
+        exit();*/
         return $exportedAds;
     }
 }

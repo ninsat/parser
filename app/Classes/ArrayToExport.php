@@ -4,15 +4,24 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use SoapBox\Formatter\Formatter;
 
 class ArrayToExport
 {
-    public static function arrayToCsv ($arrayToExport) {
+    public static function arrayToCsv ($arrayToExport, $additional) {
+
+        $attachment = 'attachment; filename=export.csv';
+        $type = 'text/csv; charset=utf-8';
+
+        if ($additional === 'output') {
+            $attachment = 'filename=export.csv';
+            $type = 'text/plain';
+        }
 
         $headers = [
             'Cache-Control'             => 'must-revalidate, post-check=0, pre-check=0',
-            'Content-type'              => 'text/csv',
-            'Content-Disposition'       => 'attachment; filename=export.csv',
+            'Content-type'              => $type,
+            'Content-Disposition'       => $attachment,
             'Expires'                   => '0',
             'Pragma'                    => 'public'
         ];
@@ -50,8 +59,105 @@ class ArrayToExport
             fclose($fp);
         };
 
+        return Response::stream($callback, 200, $headers);
+    }
 
-        //return $csvTitle;
+    public static function arrayToJson($arrayToExport, $additional) {
+
+        $attachment = 'attachment; filename=export.json';
+
+        if ($additional === 'output') {
+            $attachment = 'filename=export.json';
+        }
+
+
+        $headers = [
+            'Cache-Control'             => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-type'              => 'text/json; charset=utf-8',
+            'Content-Disposition'       => $attachment,
+            'Expires'                   => '0',
+            'Pragma'                    => 'public'
+        ];
+
+        $jsonData = json_encode($arrayToExport, JSON_PRETTY_PRINT);
+
+        $callback = function() use ($jsonData) {
+
+            $fp = fopen('php://output', 'w');
+
+            if ($fp) {
+                fputs($fp, $jsonData);
+            }
+
+            fclose($fp);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
+
+    public static function arrayToXML($arrayToExport, $additional) {
+
+        $attachment = 'attachment; filename=export.xml';
+
+        if ($additional === 'output') {
+            $attachment = 'filename=export.xml';
+        }
+
+        $headers = [
+            'Cache-Control'             => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-type'              => 'text/xml; charset=utf-8',
+            'Content-Disposition'       => $attachment,
+            'Expires'                   => '0',
+            'Pragma'                    => 'public'
+        ];
+
+        $formatter = Formatter::make($arrayToExport, Formatter::ARR);
+        $xml = $formatter->toXml();
+
+        $callback = function() use ($xml) {
+
+            $fp = fopen('php://output', 'w');
+
+            if ($fp) {
+                fputs($fp, $xml);
+            }
+
+            fclose($fp);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
+
+    public static function arrayToYAML($arrayToExport, $additional) {
+
+        $attachment = 'attachment; filename=export.yaml';
+
+        if ($additional === 'output') {
+            $attachment = 'filename=export.yaml';
+        }
+
+        $headers = [
+            'Cache-Control'             => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-type'              => 'application/json; charset=utf-8',
+            'Content-Disposition'       => $attachment,
+            'Expires'                   => '0',
+            'Pragma'                    => 'public'
+        ];
+
+        $formatter = Formatter::make($arrayToExport, Formatter::ARR);
+        $yaml = $formatter->toYaml();
+
+        $callback = function() use ($yaml) {
+
+            $fp = fopen('php://output', 'w');
+
+            if ($fp) {
+                fputs($fp, $yaml);
+            }
+
+            fclose($fp);
+        };
+
         return Response::stream($callback, 200, $headers);
     }
 }

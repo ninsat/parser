@@ -18,8 +18,10 @@ class Ad extends Model
 
     /* Парсинг обьявлений */
     public function adsFilling() {
-        $fieldDataTest = []; // Для тестирования
+        //$fieldDataTest = []; // Для тестирования
         $idArray = [];
+
+        $countParsedAds = 50;
 
         /* Выбираем обьявления для которых еще не были получены данные из парсинга */
         $adNotProcessing = DB::table('ads')
@@ -28,7 +30,7 @@ class Ad extends Model
             ->where('ignored', '=', 0)
             ->inRandomOrder()
             //->orderBy('created_at', 'asc')
-            ->take(50) // Ограничение наполнения обявлений за один запуск скрипта
+            ->take($countParsedAds) // Ограничение наполнения обявлений за один запуск скрипта
             ->get();
 
         if (count($adNotProcessing) < 1) {
@@ -316,14 +318,27 @@ class Ad extends Model
     }
 
     /* Экспорт данных по шаблону */
-    public function export($templateId, $object, $type, $paginate = 'all')
+    public function export($templateId, $object, $count, $type, $additional)
     {
+        /* Получение заданного количества обьявлений */
+        if ($count === 'all') {
+            $count = Ad::where('fetched', '=', 1)
+                ->where('template_id', '=', $templateId)
+                ->where('ignored', '=', 0)
+                ->orderBy('created_at', 'asc')
+                ->count();
+        }
+
+        if ($count < 1) {
+            return false;
+        }
 
         // Выбираем все объявления для экспорта
         $ads = Ad::where('fetched', '=', 1)
             ->where('template_id', '=', $templateId)
             ->where('ignored', '=', 0)
-            ->orderBy('created_at', 'asc')
+            ->orderBy('id', 'desc')
+            ->take($count)
             ->get();
 
         // Выбираем доступные поля
@@ -437,7 +452,19 @@ class Ad extends Model
         $result = false;
 
         if ($type === 'csv') {
-            $result = ArrayToExport::arrayToCsv($data);
+            $result = ArrayToExport::arrayToCsv($data, $additional);
+        }
+
+        if ($type === 'json') {
+            $result = ArrayToExport::arrayToJson($data, $additional);
+        }
+
+        if ($type === 'xml') {
+            $result = ArrayToExport::arrayToXML($data, $additional);
+        }
+
+        if ($type === 'yaml') {
+            $result = ArrayToExport::arrayToYAML($data, $additional);
         }
 
         return $result;
@@ -516,13 +543,19 @@ class Ad extends Model
     }
 
     public static function countAdsParsed($templateID) {
-        $result = Ad::where('fetched', 1)->where('template_id', $templateID)->count();
+        $result = Ad::where('fetched', 1)
+            ->where('ignored', 0)
+            ->where('template_id', $templateID)
+            ->count();
 
         return $result;
     }
 
     public static function countAdsFetched($templateID) {
-        $result = Ad::where('fetched', 0)->where('template_id', $templateID)->count();
+        $result = Ad::where('fetched', 0)
+            ->where('ignored', 0)
+            ->where('template_id', $templateID)
+            ->count();
 
         return $result;
     }

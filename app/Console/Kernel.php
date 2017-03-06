@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\Parse::class,
+        \App\Console\Commands\Fetch::class,
     ];
 
     /**
@@ -28,6 +29,13 @@ class Kernel extends ConsoleKernel
 
         //})->everyMinute();
        // $schedule->command('ads:parse')->everyFiveMinutes();
+
+        $schedule->call(function () {
+
+        })->everyMinute();
+
+        $schedule->command('ads:parse')->everyFiveMinutes();
+        $schedule->command('ads:fetch')->everyFiveMinutes();
     }
 
     /**

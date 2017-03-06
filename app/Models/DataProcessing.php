@@ -127,4 +127,9 @@ class DataProcessing extends Model
 
         return $result;
     }
+
+    public static function getUserTelFromJson ($string)
+    {
+
+    }
 }

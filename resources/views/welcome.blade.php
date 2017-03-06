@@ -71,7 +71,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @if (Auth::check())
-                        <a href="{{ url('/templates/create') }}">Секция парсинга</a>
+                        <a href="{{ url('/templates/all') }}">Секция парсинга</a>
                     @else
                         <a href="{{ url('/login') }}">Вход</a>
                         <a href="{{ url('/register') }}">Регистрация</a>
@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="#">Документация</a>
+                    <a href="/documentation">Документация</a>
                     <a href="#">Примеры</a>
                     <a href="#">Экспорт и API</a>
                     <a href="#">Контакты</a>

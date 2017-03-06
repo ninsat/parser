@@ -2,42 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\Helper;
 use App\Models\Ad;
 use App\Models\Field;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Template;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Mockery\CountValidator\Exception;
 
 
 class TemplateController extends Controller
 {
     /*
-     * Страницы со списком Шаблонов
+     * Страница со списком всех шаблонов пользователя
      * Ex: template/1
      *
      * */
-    public function index()
+    public function all()
     {
         $templates = DB::table('templates')
-            ->select('id', 'name')
+            ->select('id', 'name', 'work')
             ->where('user_id', '=', Auth::user()->id)
             ->get();
 
-        /* Статистика запроса */
-        foreach ($templates as $template) {
-            $template->adsProcessed = Ad::where('fetched', 1)->where('template_id', $template->id)->count();
-            $template->adsNotProcessed = Ad::where('fetched', 0)->where('template_id', $template->id)->count();
-            $template->adsIgnored = Ad::where('ignored', 1)->where('template_id', $template->id)->count();
-        }
-
-        if (empty($template)) {
+        if (count($templates) < 1) {
             return view('templates.no-result', ['templates' => $templates]);
         }
 
-        return view('templates.index', ['templates' => $templates]);
+        /* Статистика запросов */
+        foreach ($templates as $template) {
+            $template->countAdsParsed = Ad::countAdsParsed($template->id);
+            $template->countAdsFetched = Ad::countAdsFetched($template->id);
+            $template->countAdsIgnored = Ad::countAdsIgnored($template->id);
+            $template->lastUpdateDateFetched = Ad::lastUpdateFetched($template->id);
+            $template->lastUpdateDateParsed = Ad::lastUpdateParsed($template->id);
+        }
 
+        return view('templates.all', ['templates' => $templates]);
     }
 
     /*
@@ -67,7 +71,6 @@ class TemplateController extends Controller
             return redirect()->back()->with('error', 'Слишком много полей');
         }
 
-
         /* Валидация запросов */
 
         $validateRule = []; // Массив для правил валидации
@@ -88,8 +91,7 @@ class TemplateController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
-        $url = filter_var($request->input('mainUrl'), FILTER_VALIDATE_URL);
-        if ($url === false) {
+        if (!Helper::urlValidate($request->input('mainUrl'))) {
             return redirect()->back()->withErrors('Укажите правильный url');
         }
 
@@ -101,7 +103,7 @@ class TemplateController extends Controller
         $field->createNewField($inputs, $id);
 
         /* Если успешно возвращаемся на страницу своих шаблонов */
-        return redirect('/templates');
+        return redirect('/templates/all')->with('succes', 'Запрос успешно создан, не забудьте запустить его в работу');
     }
 
     /*
@@ -117,4 +119,39 @@ class TemplateController extends Controller
         return redirect()->back()->with('succes', 'Запрос успешно удален');
 
     }
+
+    /* Включение пользовательского запроса на добавление новых объявлений */
+    public function control(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'templateStart' => 'alpha_dash',
+            'templateStop' => 'alpha_dash',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
+        $result = false;
+
+        if (isset($request->templateStart)) {
+            $result = Template::startTemplateToWork($request->templateStart);
+
+            if (!empty($result)) {
+                return redirect()->back()->with('succes', 'Запрос успешно поставлен в работу, обновления появляются раз в пять минут');
+            }
+        }
+
+        if (isset($request->templateStop)) {
+            $result = Template::stopTemplateFromWork($request->templateStop);
+
+            if (!empty($result)) {
+                return redirect()->back()->with('succes', 'Запрос успешно остановлен');
+            }
+        }
+
+        return $result;
+    }
+
 }

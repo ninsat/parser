@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Classes\Helper;
 
 class Field extends Model
 {
@@ -21,6 +22,7 @@ class Field extends Model
 
 
         foreach ($preparedFields as $fieldName => $value) {
+
             $field = new Field();
             $field->name = $fieldName;
             $field->selector = $value;
@@ -33,6 +35,13 @@ class Field extends Model
 
     public function prepare(array $data)
     {
+
+        foreach ($data as $name => &$selector) {
+            if ($name === 'mainUrl') {
+                $selector = Helper::urlEncode($selector);
+            }
+        }
+
         return $data;
     }
 

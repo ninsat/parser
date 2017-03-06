@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class Parse extends Command
+class Fetch extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ads:parse';
+    protected $signature = 'ads:fetch';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Парсинг обьявлений поставленых в очередь';
+    protected $description = 'Добавление объявлений в очередь';
 
     /**
      * Create a new command instance.
@@ -38,8 +38,8 @@ class Parse extends Command
     public function handle()
     {
         $controller = app()->make('App\Http\Controllers\AdController');
-        app()->call([$controller, 'parse'], []); // В пустой массив можно передать аргументы [user_id] => 10 etc'
+        app()->call([$controller, 'fetch'], []); // В пустой массив можно передать аргументы [user_id] => 10 etc'
 
-        $this->info('Обьявления были получены');
+        $this->info('Обьявления поставлены в очередь');
     }
 }

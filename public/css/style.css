@@ -82,13 +82,21 @@ footer.main {
 }
 
 .breadcrumb {
-    background-color: #d3e0e9 !important;
+    background-color: white !important;
     color: black;
 }
 
 .breadcrumb a {
-    color: black;
+    color: #3097d1;
     text-decoration: none;
+}
+
+.breadcrumb {
+    background-color: white;
+    border-radius: 4px;
+    list-style: outside none none;
+    margin-bottom: 22px;
+    padding: 8px 0;
 }
 
 .breadcrumb > li + li::before {
@@ -104,4 +112,19 @@ a.list-badge {
 
 .fixHeight {
     height: 50vh;
+}
+
+.export-button {
+    display: block;
+    float: right;
+    margin-right: 50px;
+}
+
+.last-update {
+    padding-top: 10px;
+}
+
+a:focus, a:hover {
+    color: #216a94;
+    text-decoration: none !important;
 }

@@ -59,6 +59,17 @@ class AdController extends Controller
         return view('ad.ads-queue', ['ads' => $ads, 'template' => $template, 'stat' => $stat['adsQueue']]);
     }
 
+    public function adsListIgnored (Request $request)
+    {
+        $ads = Ad::listIgnoredAdsByTemplate($request->templateId);
+        $template = Template::templateInfoFormId($request->templateId);
+
+        /* Статистика */
+        $stat = Ad::templateStatistics($request->templateId);
+
+        return view('ad.ads-ignored', ['ads' => $ads, 'template' => $template, 'stat' => $stat['adsIgnored']]);
+    }
+
     /*
      * Контроллер отвечающий за парсинг всех обьявлений и всех полей по очереди
      * В дальнейшем должен дергаться по крону
@@ -67,12 +78,18 @@ class AdController extends Controller
     public function parse()
     {
 
+        $start = microtime(true); // Замер времени выполнения
+
         $ad = new Ad();
         $ads = $ad->adsFilling();
 
-        echo "<pre>";
-        print_r($ads);
-        echo "</pre>";
+        if (!$ads) {
+            $result = false;
+        }
+
+        $result = 'Объявления получены! Время на выполнение составило: ' . (microtime(true) - $start);
+
+        return $result;
     }
 
 
@@ -80,22 +97,55 @@ class AdController extends Controller
      * Контроллер создает первую запись обьявления в БД и ставит обьявление в очередь на парсинг
      *
      * */
-    public function fetch(Request $request)
+
+     public function fetch ()
+     {
+         $start = microtime(true); // Замер времени выполнения
+
+         $ad = new Ad();
+
+         $templateID = $ad->checkTemplateUpdateDate();
+
+         if (!$templateID) {
+             return 'Нет необработаных запросов';
+         }
+
+         $adList = $ad->adsUrlsStore($templateID);
+
+         $result = 'Количество новых объявлений: ' . $adList . ' Время на выполнение составило: ' . (microtime(true) - $start);
+
+         return $result;
+     }
+
+    public function export(Request $request)
     {
+        $type = $request->type;
+        $paginate = $request->paginate;
+        $object = $request->object;
+        $templateId = (int) $request->export_template;
 
-        $validator = Validator::make($request->input(), [
-            'template_id' => 'required|numeric|min:1|max:5',
-        ]);
+        $error = []; // Массив для ошибок
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
+        if (empty($type) && empty($paginate) && empty($object) && empty($templateId)) {
+            $error[] = 'Не переданы необходимые значения для Эекспорта';
+        }
+
+        if (!is_integer($templateId)) {
+            $error[] = 'Номер шаблона не является числовым значением';
         }
 
         $ad = new Ad();
 
-        $adList = $ad->adsUrlsStore($request->input('template_id'));
+        $exportedAds = $ad->export($templateId, $object, $type, $paginate);
 
-        return redirect()->back()->with('succes', 'Поставлено в очередь ' . $adList . ' обьявлений');
+        if (!$exportedAds) {
+            return redirect()->back()->with('errors', 'Нечего экспортировать');
+        }
 
+        if (count($error) > 0) {
+            return false;
+        }
+
+        return $exportedAds;
     }
 }

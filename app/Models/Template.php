@@ -24,6 +24,7 @@ class Template extends Model
 
         $template = new Template();
         $template->name = $preparedName;
+        $template->work = false;
         $template->user_id = Auth::user()->id;
 
         $template->save();
@@ -41,4 +42,20 @@ class Template extends Model
 
         return $result;
     }
+
+    public static function startTemplateToWork($templateID) {
+
+        $result = Template::where('id', $templateID)
+            ->update(['work' => 1]);
+
+        return $result;
+    }
+
+    public static function stopTemplateFromWork($templateID) {
+        $result = Template::where('id', $templateID)
+            ->update(['work' => 0]);
+
+        return $result;
+    }
+
 }

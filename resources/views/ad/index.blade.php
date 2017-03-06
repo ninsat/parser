@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <ol class="breadcrumb">
                 <li><a href="/">Главная</a></li>
-                <li><a href="/templates/">Мои запросы</a></li>
+                <li><a href="/templates/all">Мои запросы</a></li>
                 <li><a href="/template/{{$template->id}}/ads">{{$template->name}}</a></li>
                 <li>Обьявление ID {{$ad->id}} <small>от {{$ad->created_at}}</small></li>
             </ol>
@@ -20,8 +20,8 @@
                 </div>
                 <div class="panel-body">
                     @foreach($ad->fields as $field)
-                        <h4>{{$field['field']->name}}</h4>
-                        <div class="ad-data">{{$field['data']->body}}</div>
+                        <h5>{{$field['field']->rusName}}</h5>
+                        <div class="ad-data"><pre>{{$field['data']->body}}</pre></div>
                     @endforeach
                 </div>
             </div>

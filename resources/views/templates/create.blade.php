@@ -48,8 +48,8 @@
                         <div class="col-md-1">
                         </div>
                         <div class="col-md-8">
-                            <label class="checkbox-inline"><input type="checkbox" checked value="1">Постраничный парсинг</label>
-                            <label class="checkbox-inline"><input type="checkbox" value="">Получать контакты автора обьявления</label>
+                            <label class="checkbox-inline"><input type="checkbox" checked disabled value="1">Постраничный парсинг</label>
+                            <label class="checkbox-inline"><input type="checkbox" checked disabled value="">Получать контакты автора обьявления</label>
                         </div>
                     </div>
                 </div>

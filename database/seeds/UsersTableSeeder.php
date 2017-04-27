@@ -23,6 +23,16 @@ class UsersTableSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
+            'name' => 'alex',
+            'email' => 'alex@dartc.com.ua',
+            'password' => bcrypt('123qwe'),
+            'remember_token' => str_random(10),
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+
+        ]);
+
+        DB::table('users')->insert([
             'name' => str_random(10),
             'email' => str_random(10).'@gmail.com',
             'password' => bcrypt('secret'),

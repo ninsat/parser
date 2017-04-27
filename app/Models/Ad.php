@@ -179,17 +179,22 @@ class Ad extends Model
         /* Получаем последний элемент пагинации */
         $crawler = new Crawler($html);
 
-        $lastPaginationPage = $crawler->filter($paginationSelector)
-            ->last()->text();
+        if ($crawler->filter($paginationSelector)->last()->count()) {
 
-        /* Чистим и приводим к числовому типу */
-        $lastPaginationPage = (int)trim($lastPaginationPage);
+            $lastPaginationPage = $crawler->filter($paginationSelector)
+                ->last()->text();
 
-        /* Create array with links to category page, starts from first page to last page */
-        $paginationUrls[1] = $startUrl;
+            /* Чистим и приводим к числовому типу */
+            $lastPaginationPage = (int)trim($lastPaginationPage);
 
-        for ($i = 2; $i <= $lastPaginationPage; $i++) {
-            $paginationUrls[$i] = $startUrl . $requestPattern . $i;
+            /* Create array with links to category page, starts from first page to last page */
+            $paginationUrls[1] = $startUrl;
+
+            for ($i = 2; $i <= $lastPaginationPage; $i++) {
+                $paginationUrls[$i] = $startUrl . $requestPattern . $i;
+            }
+        } else {
+            $paginationUrls[1] = $startUrl . $requestPattern . 1;
         }
 
         /* Get for each ad */

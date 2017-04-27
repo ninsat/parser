@@ -34,8 +34,8 @@ class Kernel extends ConsoleKernel
 
         })->everyMinute();
 
-        $schedule->command('ads:parse')->everyFiveMinutes();
-        $schedule->command('ads:fetch')->everyFiveMinutes();
+        $schedule->command('ads:parse')->everyMinute();
+        $schedule->command('ads:fetch')->everyMinute();
     }
 
     /**
